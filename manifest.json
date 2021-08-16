@@ -1,0 +1,12 @@
+{
+  "manifest_version": 2,
+  "name": "goo-gone",
+  "version": "1.0",
+  "description": "does thing",
+  "content_scripts": [
+    {
+      "matches": ["*://*.google.com/search*"],
+      "js": ["gg.js"]
+    }
+  ]
+}
