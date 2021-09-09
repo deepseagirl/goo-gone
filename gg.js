@@ -1,5 +1,5 @@
-function degoo(match, p1, p2, p3, p4, p5, offset, string) {
-  return p1 + decodeURIComponent(p3).replaceAll(' ', '+') + p5;
+function degoo(match, p1, p2, p3, offset, string) {
+  return p1 + decodeURIComponent(p2).replaceAll(' ', '+') + p3;
 }
 
 const test    = /Please click <a href="(\/search\?.+?(?=">here<\/a>))">here<\/a> if you/g;
@@ -7,7 +7,12 @@ const str     = document.body.textContent;
 const array   = [...str.matchAll(test)];
 const cleaned = array[0][1].replaceAll('&amp;', '&');
 const target  = new Request("https://www.google.com" + cleaned);
-const re      = /(<a href=")(\/url\?q=)(http.+?(?=&amp;(?:sa|ved|usg)=))(&amp;(?:sa|ved|usg)=.+?(?="><[spandiv]{3,4}))("><[spandiv]{3,4} class="[A-Za-z\d ]+">.*?(?=<[spandiv]{3,4}))/g;
+
+const re      = /(<a href=")(?:\/url\?)(?!q=(?:http.+?(?=&amp;(?:sa|ved|usg)=)))?(?:q=)(http.+?(?=&amp;(?:sa|ved|usg)=))(?:&amp;(?:sa|ved|usg)=.+?(?="><))("><)/g;
+
+// replace with $1$2$3
+
+
 
 // thank u mozilla.org
 var result     = fetch(target).then(response => response.body).then(rb => {
