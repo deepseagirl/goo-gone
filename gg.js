@@ -3,13 +3,13 @@ function degoo(match, p1, p2, p3, offset, string) {
 }
 
 const test    = /Please click <a href="(\/search\?.+?(?=">here<\/a>))">here<\/a> if you/g;
-const link    = document.body.textContent.match(test);
-const target  = new Request("https://www.google.com" + link);
-const re      = /(<a href=")(?:\/url\?)(?!q=(?:http.+?(?=&amp;(?:sa|ved|usg)=)))?(?:q=)(http.+?(?=&amp;(?:sa|ved|usg)=))(?:&amp;(?:sa|ved|usg)=.+?(?="><))("><)/g;
+const link    = [...document.body.textContent.matchAll(test)];
+const target  = new Request("https://www.google.com" + link[0][1]);
 
-// replace with $1$2$3
-
-
+// OG fix
+const re      = /(<a href=")(?:\/url\?)(?!q=(?:http.+?(?=&amp;(?:sa|ved|usg)=)))?(?:q=)(http.+?(?=&amp;(?:sa|ved|usg)=))(?:&amp;(?:sa|ved|usg)=(?:\\"|[^"])+?(?="><))("><)/g;
+// new fix
+const re2 = / ?(?:data-ved|onmousedown)="[^"]+?" ?/gi;
 
 // thank u mozilla.org
 var result     = fetch(target).then(response => response.body).then(rb => {
@@ -34,6 +34,7 @@ var result     = fetch(target).then(response => response.body).then(rb => {
   return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
 })
 .then(result => {
-  document.body.innerHTML = result.replaceAll(re, degoo);
-  //document.body.innerHTML = newresult; // accidentally discards some parts of the dom that we want to keep ;-; fix next time
+  let newresult = result.replaceAll(re, degoo);
+  let newnewresult = newresult.replaceAll(re2, '');
+  document.body.innerHTML = newnewresult;
 });
