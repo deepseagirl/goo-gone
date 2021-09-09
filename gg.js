@@ -3,11 +3,8 @@ function degoo(match, p1, p2, p3, offset, string) {
 }
 
 const test    = /Please click <a href="(\/search\?.+?(?=">here<\/a>))">here<\/a> if you/g;
-const str     = document.body.textContent;
-const array   = [...str.matchAll(test)];
-const cleaned = array[0][1].replaceAll('&amp;', '&');
-const target  = new Request("https://www.google.com" + cleaned);
-
+const link    = document.body.textContent.match(test);
+const target  = new Request("https://www.google.com" + link);
 const re      = /(<a href=")(?:\/url\?)(?!q=(?:http.+?(?=&amp;(?:sa|ved|usg)=)))?(?:q=)(http.+?(?=&amp;(?:sa|ved|usg)=))(?:&amp;(?:sa|ved|usg)=.+?(?="><))("><)/g;
 
 // replace with $1$2$3
@@ -37,6 +34,8 @@ var result     = fetch(target).then(response => response.body).then(rb => {
   return new Response(stream, { headers: { "Content-Type": "text/html" } }).text();
 })
 .then(result => {
-  let newresult = result.replaceAll(re, degoo);
-  document.body.innerHTML = newresult; // accidentally discards some parts of the dom that we want to keep ;-; fix next time
+  document.body.innerHTML = result.replaceAll(re, degoo);
+  //document.body.innerHTML = newresult; // accidentally discards some parts of the dom that we want to keep ;-; fix next time
 });
+
+console.log("hi");
