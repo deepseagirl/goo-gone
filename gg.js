@@ -37,4 +37,3 @@ var result     = fetch(target).then(response => response.body).then(rb => {
   document.body.innerHTML = result.replaceAll(re, degoo);
   //document.body.innerHTML = newresult; // accidentally discards some parts of the dom that we want to keep ;-; fix next time
 });
-
